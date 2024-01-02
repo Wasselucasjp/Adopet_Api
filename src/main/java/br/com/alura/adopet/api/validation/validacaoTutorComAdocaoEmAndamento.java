@@ -5,25 +5,27 @@ import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.model.StatusAdocao;
+import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
+import br.com.alura.adopet.api.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class validacaoPetComAdocaoEmAndamento {
+public class validacaoTutorComAdocaoEmAndamento {
     @Autowired
     private AdocaoRepository adocaoRepository;
     @Autowired
-    private PetRepository petRepository;
+    private TutorRepository tutorRepository;
     public void validar(SolicitacaoAdocaoDto dto){
         List<Adocao> adocoes = adocaoRepository.findAll();
-        Pet pet = petRepository.getReferenceById(dto.idPet());
+        Tutor tutor = tutorRepository.getReferenceById(dto.idTutor());
         for (Adocao a : adocoes) {
-            if (a.getPet() == pet && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                throw new ValidacaoException("Pet já está aguardando avaliação para ser adotado!");
+            if (a.getTutor() == tutor && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
+                throw new ValidacaoException("Tutor já possui outra adoção aguardando avaliação!");
             }
         }
     }
