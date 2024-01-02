@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class validacaoTutorComAdocaoEmAndamento {
+public class validacaoTutorComAdocaoEmAndamento implements ValidacaoSolicitacaoAdocao {
     @Autowired
     private AdocaoRepository adocaoRepository;
     @Autowired
