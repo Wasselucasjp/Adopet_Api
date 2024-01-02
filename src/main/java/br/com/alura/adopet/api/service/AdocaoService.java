@@ -85,9 +85,10 @@ public class AdocaoService {
         );
     }
 
-    public void reprovar(Adocao adocao){
+    public void reprovar(ReprovacaoAdocaoDto dto){
+        Adocao adocao = repository.getReferenceById(dto.idAdocao());
         adocao.setStatus(StatusAdocao.REPROVADO);
-        repository.save(adocao);
+        adocao.setJustificativaStatus(dto.justificativa());
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
                 "Adoção reprovada ",
