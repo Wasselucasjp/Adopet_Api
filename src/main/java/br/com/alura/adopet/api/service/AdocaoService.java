@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -59,4 +60,17 @@ public class AdocaoService {
         email.setText("Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
         emailSender.send(email);
     }
+
+    public void aprovar(Adocao adocao){
+        adocao.setStatus(StatusAdocao.APROVADO);
+        repository.save(adocao);
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setFrom("adopet@email.com.br");
+        email.setTo(adocao.getTutor().getEmail());
+        email.setSubject("Adoção aprovada");
+        email.setText("Parabéns " +adocao.getTutor().getNome() +"!\n\nSua adoção do pet " +adocao.getPet().getNome() +", solicitada em " +adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +", foi aprovada.\nFavor entrar em contato com o abrigo " +adocao.getPet().getAbrigo().getNome() +" para agendar a busca do seu pet.");
+        emailSender.send(email);
+    }
+
 }
