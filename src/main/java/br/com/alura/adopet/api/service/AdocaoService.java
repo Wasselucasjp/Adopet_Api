@@ -75,9 +75,9 @@ public class AdocaoService {
                 "Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
     }
 
-    public void aprovar(Adocao adocao){
+    public void aprovar(AprovacaoAdocaoDto dto){
+        Adocao adocao = repository.getReferenceById(dto.idAdocao());
         adocao.setStatus(StatusAdocao.APROVADO);
-        repository.save(adocao);
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
                 "Adoção aprovada",
