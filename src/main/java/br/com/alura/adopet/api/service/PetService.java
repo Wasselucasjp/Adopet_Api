@@ -11,7 +11,7 @@ public class PetService {
     private PetRepository Repository;
     public List<PetDto> buscarPetsDisponivel(){
         return Repository
-                .findByAllAdotadoFalse()
+                .findAllByAdotadoFalse()
                 .stream()
                 .map(PetDto::new)
                 .toList();
