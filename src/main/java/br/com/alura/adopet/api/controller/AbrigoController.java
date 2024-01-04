@@ -56,4 +56,16 @@ public class AbrigoController {
         }
     }
 
+    @PostMapping("/{idOuNome}/pets")
+    @Transactional
+    public ResponseEntity<String> cadastrarPet(@PathVariable String idOuNome, @RequestBody @Valid CadastroPetDto dto) {
+        try {
+            Abrigo abrigo = abrigoService.carregarAbrigo(idOuNome);
+            petService.cadastrarPet(abrigo, dto);
+            return ResponseEntity.ok().build();
+        }
+        catch (ValidacaoException exception){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
