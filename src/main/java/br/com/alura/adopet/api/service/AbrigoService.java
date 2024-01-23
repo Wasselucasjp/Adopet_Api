@@ -8,9 +8,7 @@ import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.repository.AbrigoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +33,13 @@ public class AbrigoService {
                .toList();
     }
 
-    public void cadastrar(CadastroAbrigoDto dto){
-        boolean jaCadastrado = abrigoRepository.existByNomeOrTeleFoneOrEmail(dto.nome(), dto.telefone(), dto.email());
-        if (jaCadastrado){
-            throw new ValidacaoException("Dados cadastrado em outro abrigo!");
+    public void cadastrar(CadastroAbrigoDto dto) {
+        boolean jaCadastrado = abrigoRepository.existsByNomeOrTelefoneOrEmail(dto.nome(), dto.telefone(), dto.email());
+
+        if (jaCadastrado) {
+            throw new ValidacaoException("Dados já cadastrados para outro abrigo!");
         }
+
         abrigoRepository.save(new Abrigo(dto));
     }
 
