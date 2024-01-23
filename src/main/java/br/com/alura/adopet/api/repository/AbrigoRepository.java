@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AbrigoRepository extends JpaRepository<Abrigo, Long> {
 
-    boolean existByNomeOrTeleFoneOrEmail( String nome, String telefone, String email);
+    boolean existsByNomeOrTelefoneOrEmail( String nome, String telefone, String email);
 
     Optional<Abrigo> findByNome(String idOuNome);
 }
