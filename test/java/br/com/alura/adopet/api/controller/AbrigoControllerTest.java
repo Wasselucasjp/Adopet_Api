@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.controller;
 
+import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.service.AbrigoService;
 import br.com.alura.adopet.api.service.PetService;
@@ -14,6 +15,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -102,6 +104,19 @@ class AbrigoControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    void deveriaDevolverCodigo404ParaRequisicaoDeListarPetsDoAbrigoPorIdInvalido() throws Exception {
+        String id = "1";
+        given(
+                abrigoService.listarPetsDoAbrigo(id)
+        ).willThrow(ValidacaoException.class);
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/abrigos/{nome}/pets",id)
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
     }
 
 }
