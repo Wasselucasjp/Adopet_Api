@@ -41,10 +41,8 @@ class AbrigoServiceTest {
         //Arrange
         String nome = "Miau";
         given(abrigoRepository.findByNome(nome)).willReturn(Optional.of(abrigo));
-
         //Act
         service.listarPetsDoAbrigo(nome);
-
         //Assert
         then(petRepository).should().findByAbrigo(abrigo);
     }
