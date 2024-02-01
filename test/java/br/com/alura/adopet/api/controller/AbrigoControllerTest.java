@@ -63,5 +63,22 @@ class AbrigoControllerTest {
         assertEquals(200, response.getStatus());
     }
 
+    @Test
+    void deveriaDevolverCodigo400ParaRequisicaoDeCadastrarAbrigo() throws Exception {
+        //ACT
+        String json = """
+                {
+                    "nome":"Abrigo teste",
+                    "telefone":"(00)0000-00000",
+                    "email":"teste@teste.com"
+                }
+                """;
+        MockHttpServletResponse response = mockMvc.perform(
+                post("/abrigos")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
 
+        assertEquals(400, response.getStatus());
+    }
 }
