@@ -83,6 +83,24 @@ class AdocaoServiceTest {
 
     }
 
+    @Test
+    void deveriaChamarValidadoresDeAdocaoAoSolicitar(){
+        //ARRANGE
+        this.dto = new SolicitacaoAdocaoDto(10l, 20l, "Motivo qualquer");
+        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+        given(pet.getAbrigo()).willReturn(abrigo);
+
+        validacoes.add(validador1);
+        validacoes.add(validador2);
+
+        //ACT
+        service.solicitar(dto);
+        //ASSERT
+        BDDMockito.then(validador1).should().validar(dto);
+        BDDMockito.then(validador2).should().validar(dto);
+    }
+
    
 
 }
