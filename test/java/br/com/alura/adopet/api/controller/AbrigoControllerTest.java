@@ -119,4 +119,18 @@ class AbrigoControllerTest {
         assertEquals(404, response.getStatus());
     }
 
+    @Test
+    void deveriaDevolverCodigo400ParaRequisicaoDeListarPetsDoAbrigoPorNomeInvalido() throws Exception {
+        //Arrange
+        String nome = "Miau";
+        given(abrigoService.listarPetsDoAbrigo(nome)).willThrow(ValidacaoException.class);
+
+        //Act
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/abrigos/{nome}/pets",nome)
+        ).andReturn().getResponse();
+
+        //Assert
+        assertEquals(404, response.getStatus());
+    }
 }
