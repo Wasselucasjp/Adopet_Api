@@ -147,9 +147,10 @@ class AbrigoControllerTest {
                       "peso": "6.4"
                    }
                 """;
+        String abrigoId = "1";
         //ACT
         MockHttpServletResponse response = mockMvc.perform(
-                post("/abrigos/{abrigoId}/pets",json)
+                post("/abrigos/{abrigoId}/pets",abrigoId)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();
