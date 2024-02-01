@@ -41,4 +41,22 @@ class TutorControllerTest {
         assertEquals(200, response.getStatus());
     }
 
+    @Test
+    void deveriaDevolverCodigo400ParaRequisicaoCadastrarTutorDadosInvalidos() throws Exception {
+        //Arrange
+        String json = """
+                {
+                    "nome": "Rodrigo",
+                    "telefone": "(21)0000-90900",
+                    "email":"email@example.com.br"
+                }
+                """;
+        MockHttpServletResponse response = mockMvc.perform(
+                post("/tutores")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+        assertEquals(400, response.getStatus());
+    }
+
 }
