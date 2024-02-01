@@ -1,10 +1,8 @@
 package br.com.alura.adopet.api.service;
 
+import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
-import br.com.alura.adopet.api.model.Abrigo;
-import br.com.alura.adopet.api.model.Adocao;
-import br.com.alura.adopet.api.model.Pet;
-import br.com.alura.adopet.api.model.Tutor;
+import br.com.alura.adopet.api.model.*;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
@@ -15,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +59,12 @@ class AdocaoServiceTest {
 
     @Mock
     private Pet pet;
+
+    @Mock
+    private AprovacaoAdocaoDto aprovacaoAdocaoDto;
+
+    @Spy
+    private Adocao adocao;
 
     @Captor
     private ArgumentCaptor<Adocao> adocaoArgumentCaptor;
@@ -121,6 +126,21 @@ class AdocaoServiceTest {
                 "Solicitação de adoção",
                 "Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação."
         );
+    }
+
+    @Test
+    void  deveriaAprovarUmaAdocao(){
+        given(adocaoRepository.getReferenceById(aprovacaoAdocaoDto.idAdocao())).willReturn(adocao);
+        given(adocao.getPet()).willReturn(pet);
+        given(pet.getAbrigo()).willReturn(abrigo);
+        given(abrigo.getEmail()).willReturn("emailteste@teste.com.br");
+        given(adocao.getTutor()).willReturn(tutor);
+        given(tutor.getNome()).willReturn("NameTest");
+        given(adocao.getData()).willReturn(LocalDateTime.now());
+
+        service.aprovar(aprovacaoAdocaoDto);
+        then(adocao).should().marcarComoAprovado();
+        assertEquals(StatusAdocao.APROVADO, adocao.getStatus());
     }
 
 }
