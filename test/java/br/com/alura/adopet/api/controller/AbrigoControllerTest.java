@@ -133,4 +133,28 @@ class AbrigoControllerTest {
         //Assert
         assertEquals(404, response.getStatus());
     }
+
+    @Test
+    void deveriaDevolverCodigo200ParaRequisicaoParaCadastarPetPorId() throws Exception {
+        //Arrange
+        String json = """
+                   {
+                      "tipo": "GATO",
+                      "nome": "Miau",
+                      "raca": "padrao",
+                      "idade": "5",
+                      "cor" : "Parda",
+                      "peso": "6.4"
+                   }
+                """;
+        //ACT
+        MockHttpServletResponse response = mockMvc.perform(
+                post("/abrigos/{abrigoId}/pets",json)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+        //Assert
+        assertEquals(200, response.getStatus());
+    }
+
 }
