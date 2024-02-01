@@ -1,6 +1,7 @@
 package br.com.alura.adopet.api.service;
 
 import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
+import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.model.*;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
@@ -62,6 +63,9 @@ class AdocaoServiceTest {
 
     @Mock
     private AprovacaoAdocaoDto aprovacaoAdocaoDto;
+
+    @Mock
+    private ReprovacaoAdocaoDto reprovacaoAdocaoDto;
 
     @Spy
     private Adocao adocao;
@@ -142,5 +146,19 @@ class AdocaoServiceTest {
         then(adocao).should().marcarComoAprovado();
         assertEquals(StatusAdocao.APROVADO, adocao.getStatus());
     }
+    
+    @Test
+    void  deveriaReprovarUmaAdocao(){
+        given(adocaoRepository.getReferenceById(aprovacaoAdocaoDto.idAdocao())).willReturn(adocao);
+        given(adocao.getPet()).willReturn(pet);
+        given(pet.getAbrigo()).willReturn(abrigo);
+        given(abrigo.getEmail()).willReturn("emailteste@teste.com.br");
+        given(adocao.getTutor()).willReturn(tutor);
+        given(tutor.getNome()).willReturn("NameTest");
+        given(adocao.getData()).willReturn(LocalDateTime.now());
 
+        service.reprovar(reprovacaoAdocaoDto);
+        then(adocao).should().marcarComoReprovado(reprovacaoAdocaoDto.justificativa());
+        assertEquals(StatusAdocao.REPROVADO, adocao.getStatus());
+    }
 }
