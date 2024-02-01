@@ -182,4 +182,34 @@ class AbrigoControllerTest {
         assertEquals(200, response.getStatus());
     }
 
+
+    @Test
+    void   deveriaDevolverCodigo404ParaRequisicaoDeCadastrarPetAbrigoNaoEcontradoPeloId() throws Exception {
+        //Arrange
+        String json = """
+                {
+                    "tipo": "GATO",
+                    "nome": "Miau",
+                    "raca": "padrao",
+                    "idade": "5",
+                    "cor" : "Parda",
+                    "peso": "6.4"
+                }
+                """;
+
+        String abrigoId = "1";
+
+        given(abrigoService.carregarAbrigo(abrigoId)).willThrow(ValidacaoException.class);
+
+        //Act
+        MockHttpServletResponse response = mockMvc.perform(
+                post("/abrigos/{abrigoId}/pets",abrigoId)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        //Assert
+        assertEquals(404,response.getStatus());
+    }
+
 }
