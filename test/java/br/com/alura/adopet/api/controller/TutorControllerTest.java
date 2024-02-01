@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -57,6 +58,25 @@ class TutorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();
         assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    void deveriaDevolverCodigo200ParaRequisicaoDeAtualizarTutor() throws Exception {
+        //Arrange
+        String json = """
+                {   
+                    "id": "1",
+                    "nome": "Rodrigo",
+                    "telefone": "(21)0000-9090",
+                    "email":"email@example.com.br"
+                }
+                """;
+        MockHttpServletResponse response = mockMvc.perform(
+                put("/tutores")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+        assertEquals(200,response.getStatus());
     }
 
 }
