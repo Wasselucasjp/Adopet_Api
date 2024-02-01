@@ -15,6 +15,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,7 +147,7 @@ class AdocaoServiceTest {
         then(adocao).should().marcarComoAprovado();
         assertEquals(StatusAdocao.APROVADO, adocao.getStatus());
     }
-    
+
     @Test
     void  deveriaReprovarUmaAdocao(){
         given(adocaoRepository.getReferenceById(aprovacaoAdocaoDto.idAdocao())).willReturn(adocao);
@@ -161,4 +162,29 @@ class AdocaoServiceTest {
         then(adocao).should().marcarComoReprovado(reprovacaoAdocaoDto.justificativa());
         assertEquals(StatusAdocao.REPROVADO, adocao.getStatus());
     }
+
+    @Test
+    void  deveriaEnviarEmailAprovarAdocao(){
+        given(adocaoRepository.getReferenceById(aprovacaoAdocaoDto.idAdocao())).willReturn(adocao);
+        given(adocao.getPet()).willReturn(pet);
+        given(pet.getAbrigo()).willReturn(abrigo);
+        given(abrigo.getEmail()).willReturn("emailteste@teste.com.br");
+        given(adocao.getTutor()).willReturn(tutor);
+        given(tutor.getNome()).willReturn("NameTest");
+        given(adocao.getData()).willReturn(LocalDateTime.now());
+
+        service.aprovar(aprovacaoAdocaoDto);
+        then(emailService).should().enviarEmail(
+            adocao.getPet().getAbrigo().getEmail(),
+                "Adoção aprovada",
+                "Parabéns " +adocao.getTutor().getNome() +"!\n\nSua adoção do pet "
+                        +adocao.getPet().getNome()
+                        +", solicitada em "
+                        +adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
+                        +", foi aprovada.\nFavor entrar em contato com o abrigo "
+                        +adocao.getPet().getAbrigo().getNome() +" para agendar a busca do seu pet."
+
+        );
+    }
+
 }
