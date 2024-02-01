@@ -101,6 +101,26 @@ class AdocaoServiceTest {
         BDDMockito.then(validador2).should().validar(dto);
     }
 
-   
+    @Test
+    void deveriaEnviarEmailAoSolicitarAdocao(){
+
+        //ARRANGE
+        SolicitacaoAdocaoDto dto = new SolicitacaoAdocaoDto(1l, 3l, "motivo teste");
+        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+        given(pet.getAbrigo()).willReturn(abrigo);
+
+        //ACT
+        service.solicitar(dto);
+
+        //ASSERT
+        then(adocaoRepository).should().save(adocaoArgumentCaptor.capture());
+        Adocao adocao = adocaoArgumentCaptor.getValue();
+        then(emailService).should().enviarEmail(
+                adocao.getPet().getAbrigo().getEmail(),
+                "Solicitação de adoção",
+                "Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação."
+        );
+    }
 
 }
