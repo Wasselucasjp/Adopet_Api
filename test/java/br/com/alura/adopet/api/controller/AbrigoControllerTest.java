@@ -92,4 +92,16 @@ class AbrigoControllerTest {
 
         assertEquals(200, response.getStatus());
     }
+
+    @Test
+    void deveriaDevolverCodigo200ParaRequisicaoDeListarPetsDoAbrigoPorId() throws Exception {
+        //ACT
+        String id = "1";
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/abrigos/{id}/pets",id)
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+    }
+
 }
